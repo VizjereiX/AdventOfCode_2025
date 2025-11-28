@@ -3,6 +3,7 @@ import os
 from importlib import import_module
 
 COLOR_ERROR = '\033[91m'
+COLOR_WARNING = '\033[93m'
 COLOR_END = '\033[0m'
 
 def get_available_days():
@@ -33,6 +34,10 @@ def main():
         for file in os.listdir(data_dir):
             if file.startswith("input"):
                 output_file = file.replace("input", "output")
+                if not os.path.isfile(f"{data_dir}/{output_file}"):
+                    print(f"{COLOR_WARNING}No output file found for {file}{COLOR_END}")
+                    continue
+
                 print(f"Testing {file} against {output_file}", end=" ... ")
                 with open(f"{data_dir}/{output_file}", "r") as f:
                     expected_output = f.read().strip()
