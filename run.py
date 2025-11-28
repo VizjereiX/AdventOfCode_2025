@@ -2,6 +2,8 @@ from argparse import ArgumentParser
 import os
 from importlib import import_module
 
+COLOR_ERROR = '\033[91m'
+COLOR_END = '\033[0m'
 
 def get_available_days():
     for dirpath, _, filenames in os.walk("tasks"):
@@ -37,15 +39,19 @@ def main():
                 
                 output =  module.run(f"{data_dir}/{file}")
                 if output != expected_output:
-                    print(f" failed!")
-                    print(f"Expected: {expected_output}, Got: {output}")
+                    print(f"{COLOR_ERROR} failed!")
+                    print(f"Expected: {expected_output}, Got: {output}{COLOR_END}")
                     errors += 1
                 else:
                     print(" passed!")
                 test_count += 1
         print(f"Tests run: {test_count}, \tErrors: {errors}")
     else:
-        output =  module.run(f"{data_dir}/data")
+        datapath = f"{data_dir}/data"
+        if os.path.isfile(datapath) == False:
+            print(f"{COLOR_ERROR}No data file found at {datapath}{COLOR_END}")
+            return
+        output =  module.run(datapath)
         print(output)
 
 if __name__ == "__main__":
