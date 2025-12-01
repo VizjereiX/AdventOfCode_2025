@@ -4,7 +4,7 @@ from importlib import import_module
 import logging
 
 logger = logging.getLogger("[AoC]")
-logging.basicConfig(level=logging.DEBUG) 
+logging.basicConfig(level=logging.ERROR) 
 
 
 COLOR_ERROR = '\033[91m'
@@ -24,46 +24,54 @@ def main():
         epilog="Enjoy the challenge!"
     )
 
-    parser.add_argument("mode", choices=["test", "run"], help="Test solution on examples or run command on samples")
+    parser.add_argument("mode", choices=["test", "run","full"] , help="Test solution on examples or run command on samples")
     parser.add_argument("task", type=str, choices=list(get_available_days()), help="Which day's solution to execute")
+    parser.add_argument("-v", "--verbosity", action="count", help="Increase output verbosity", default=0)
     args = parser.parse_args()
 
     module_path = f"tasks.{args.task}".replace("/", ".")
-    print(args.task, module_path)
+    
+
+    logger.setLevel(level=logging.ERROR - max(0, 10 * args.verbosity))
+
     module = import_module(module_path)
     module.logger = logger
 
     data_dir = f"tasks/{args.task}"
 
-    if args.mode == "test":
-        test_count, errors = 0, 0
+    test_count, errors = 0, 0
+    if args.mode == "test" or args.mode == "full":
         for file in os.listdir(data_dir):
             if file.startswith("input"):
                 output_file = file.replace("input", "output")
                 if not os.path.isfile(f"{data_dir}/{output_file}"):
-                    print(f"{COLOR_WARNING}No output file found for {file}{COLOR_END}")
+                    logger.warning(f"{COLOR_WARNING}No output file found for {file}{COLOR_END}")
                     continue
 
-                print(f"Testing {file} against {output_file}", end=" ... ")
+                logger.info(f"Testing {file} against {output_file}.")
                 with open(f"{data_dir}/{output_file}", "r") as f:
                     expected_output = f.read().strip()
                 
                 output =  module.run(f"{data_dir}/{file}")
                 if output != expected_output:
-                    print(f"{COLOR_ERROR} failed!")
-                    print(f"Expected: {expected_output}, Got: {output}{COLOR_END}")
+                    logger.error(f"{COLOR_ERROR} failed! Expected: {expected_output}, Got: {output}{COLOR_END}")
                     errors += 1
                 else:
-                    print(" passed!")
+                    logger.info("Passed!")
                 test_count += 1
+                
         print(f"Tests run: {test_count}, \tErrors: {errors}")
-    else:
+    if args.mode == "run" or args.mode == "full":
         datapath = f"{data_dir}/data"
         if os.path.isfile(datapath) == False:
-            print(f"{COLOR_ERROR}No data file found at {datapath}{COLOR_END}")
+            logger.error(f"{COLOR_ERROR}No data file found at {datapath}{COLOR_END}")
+            return
+        
+        if errors > 0:
+            logger.error("Do not starting work on full data due to errors in test runs")
             return
         output =  module.run(datapath)
-        print(output)
+        print(f"Response: {output}")
 
 if __name__ == "__main__":
     main() 

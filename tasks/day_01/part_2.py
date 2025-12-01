@@ -4,9 +4,9 @@ def run(filename):
     dial = 50
     cnt = 0
     dir = {'L': -1, 'R': 1}
-    logger.info(f"The dial starts by pointing at {dial}.")
+    logger.debug(f"The dial starts by pointing at {dial}.")
     i = 0
-    print(filename)
+  
     with open(filename, "r") as f:
         data = f.read()
         for line in data.splitlines():
@@ -23,7 +23,7 @@ def run(filename):
                 if dial == 0:
                     add_cnt += 1
 
-            logger.info(f"The dial is rotated {line} to point at {dial}; \t\t{add_cnt if add_cnt > 0 else ""} [{cnt + add_cnt}]")
+            logger.debug(f"The dial is rotated {line} to point at {dial}; \t\t{add_cnt if add_cnt > 0 else ""} [{cnt + add_cnt}]")
 
             if add_cnt > 0:
                 cnt += add_cnt
