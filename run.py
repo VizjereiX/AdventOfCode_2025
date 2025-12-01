@@ -1,6 +1,11 @@
 from argparse import ArgumentParser 
 import os
 from importlib import import_module
+import logging
+
+logger = logging.getLogger("[AoC]")
+logging.basicConfig(level=logging.DEBUG) 
+
 
 COLOR_ERROR = '\033[91m'
 COLOR_WARNING = '\033[93m'
@@ -26,6 +31,7 @@ def main():
     module_path = f"tasks.{args.task}".replace("/", ".")
     print(args.task, module_path)
     module = import_module(module_path)
+    module.logger = logger
 
     data_dir = f"tasks/{args.task}"
 
