@@ -64,8 +64,12 @@ def main():
     if args.mode == "run" or args.mode == "full":
         datapath = f"{data_dir}/data"
         if os.path.isfile(datapath) == False:
-            logger.error(f"{COLOR_ERROR}No data file found at {datapath}{COLOR_END}")
-            return
+            higher_level_path =  f"tasks/{args.task[0:args.task.index("/")]}/data"
+            if os.path.isfile(higher_level_path) == False:
+              logger.error(f"{COLOR_ERROR}No data file found at {datapath}{COLOR_END}")
+              return
+            else:
+                datapath  = higher_level_path
         
         if errors > 0:
             logger.error("Do not starting work on full data due to errors in test runs")

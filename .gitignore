@@ -209,3 +209,7 @@ __marimo__/
 # data files - they will be very big, so we ignore them
 tasks/*/data
 tasks/*/*/data
+
+
+gen.py
+.env
