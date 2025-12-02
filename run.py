@@ -3,8 +3,8 @@ import os
 from importlib import import_module
 import logging
 
-logger = logging.getLogger("[AoC]")
-logging.basicConfig(level=logging.ERROR) 
+logger = logging.getLogger("AoC")
+logging.basicConfig(level=logging.ERROR, format='[%(name)s] %(levelname)s: %(message)s') 
 
 
 COLOR_ERROR = '\033[91m'
@@ -54,7 +54,7 @@ def main():
                 
                 output =  module.run(f"{data_dir}/{file}")
                 if output != expected_output:
-                    logger.error(f"{COLOR_ERROR} failed! Expected: {expected_output}, Got: {output}{COLOR_END}")
+                    logger.error(f"{COLOR_ERROR} failed! Expected: {repr(expected_output)}, Got: {repr(output)}{COLOR_END}")
                     errors += 1
                 else:
                     logger.info("Passed!")

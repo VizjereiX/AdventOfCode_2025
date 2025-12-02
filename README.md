@@ -11,15 +11,17 @@ Test runner for Advent of Code solutions
 
 positional arguments:
   {test, run, full}          Choose execution mode
-  {day_1/part_1, ...}  Which day's solution to execute
+  {day_1/part_1, ...}        Which day's solution to execute
 
 optional arguments:
-  -h, --help       show this help message and exit
-  -v, --verbosity  Increase output verbosity
+  -h, --help           Show this help message and exit
+  -v, --verbosity      Increase output verbosity
 ```
 
 First parameter is called "mode". On "test" it is running your solution or all test inputs and test them against test outputs. Each inpout/output pair has to be placed in the same directory. Input file has to start with "input" and corresponding output has to same the same name, with "input" replaced to "output".
+
 On "run" it is feeding the tested script with full data (file literally called `data`).
+
 You can use "full mode" to do all test and then run script on full data if and only if all tests are OK.
 
 
